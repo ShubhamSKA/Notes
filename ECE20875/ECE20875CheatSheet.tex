@@ -1,0 +1,93 @@
+\documentclass{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{array}
+\usepackage{amsmath}
+\usepackage{fancyvrb}
+\usepackage{caption}
+\captionsetup[table]{skip=10pt}
+
+\begin{document}
+\section{Confidence Intervals, etc.}
+If a value $z_c$ or $t_c$ value with $N-1$ degrees of freedom corresponds to our desired confidence interval:
+\begin{equation*}
+    \mu \in \left(\bar{X} -\frac{z_c\sigma}{\sqrt{N}},\bar{X}+\frac{z_c\sigma}{\sqrt{N}}\right)
+\end{equation*} 
+If it is a one tailed test, we use $\alpha=1-(confidence_{interval})$, but for a two-tailed test, we use $\alpha = \frac{\alpha_{onetail}}{2}$
+\section{RegEx}
+In other document.
+\section{Linear Regression}
+
+\begin{equation*}
+    \beta = Vy
+\end{equation*}
+Where 
+\begin{equation*}
+    V = (X^T X)^{-1}X^T
+\end{equation*}
+Assume $\beta = [a_1,a_2,\ldots, b]^T$. \\
+\begin{equation*}
+    \hat{y} = a_1 x_1 +a_2 x_2 + \cdots + b
+\end{equation*}
+If there are N samples, with M features + bias term (b).\\
+Without bias term:
+\begin{eqnarray*}
+    \dim(X) = N\times M\\
+    \dim(y) = N\times 1\\
+    \dim(\beta) = M\times 1 
+\end{eqnarray*}
+That is X has N rows, M columns.\\
+With bias term:
+\begin{eqnarray*}
+    \dim(X) = N\times (M+1)\\
+    \dim(y) = N\times 1\\
+    \dim(\beta) = (M+1)\times 1 
+\end{eqnarray*}
+Essentially, the bias term is an additional feature when looking at dimensions.\\
+If there is no bias term initially, or provided, one can assume all bias terms have a value of 1, making it an additional last column to the X matrix.
+\subsection{Normalization}
+We calculate $\mu$ and $\sigma$ for each column in $X$ and $y$ where 
+\begin{eqnarray*}
+    \mu_n = \frac{\sum x}{\text{len($x_n$)}}\\
+    \sigma_n = \sqrt{\frac{\sum (x-\mu)^2}{\text{len($x_n$)}}}
+\end{eqnarray*}
+Normalize using:
+\begin{equation*}
+    z=\frac{x-\mu}{\sigma}
+\end{equation*}
+\subsection{MSE}
+\begin{equation*}
+    MSE = \frac{\sum E^2}{N}
+\end{equation*}
+where $E$ is the error of a sample, and $N$ is the number of samples.
+\section{Ridge Regression}
+\begin{equation*}
+    \beta = Vy
+\end{equation*}
+Where 
+\begin{equation*}
+    V = (X^T X+\lambda I)^{-1}X^T
+\end{equation*}
+If we want to perform N-fold cross-validation, and we are considering M values of $\lambda$, there are $MN$ possibilities of trainable models.\\
+The larger the value of $\lambda$, the less it fits the model. So, a very small lambda is likely to overfit, or, at the very least, allow for overfitting.\\
+Ridge Regression Loss is:
+\begin{equation*}
+    \sum(y-\hat{y})^2+\lambda\sum \beta^2
+\end{equation*}
+\section{N-gram}
+\begin{itemize}
+    \item word-based: N consecutive words, starting from one word after the previous one. Will have exactly N words.
+    \item character-based: N consecutive characters, rest is basically the same as the above.
+\end{itemize}
+Term frequency:
+\begin{equation*}
+    TF(t,d) = \frac{\# t \text{ in } d}{\text{len($d$)}}
+\end{equation*}
+Inverse Document Frequency:
+\begin{equation*}
+    IDF(t,D) = \log\left(\frac{\#\text{documents}}{\#\text{documents with }t}\right)
+\end{equation*}
+Importance of word:
+\begin{equation*}
+    TF\text{-}IDF(t,d,D) = TF(t,d) \times IDF(t,D)
+\end{equation*}
+\end{document}

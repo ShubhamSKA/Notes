@@ -1,0 +1,94 @@
+\documentclass[twocolumn]{article}
+
+\usepackage{graphicx}
+\usepackage[a4paper, margin=0.5in]{geometry}
+\usepackage{amsmath}
+\usepackage{circuitikz}
+
+\begin{document}
+
+\section*{Classifications}
+\pagestyle{empty}
+\textbf{Linear}: $\alpha_1 x_1(t)+\alpha_2 x_2(t) = \alpha_1 y_1(t)+\alpha_2 y_2(t) ~\forall~ \alpha_1,\alpha_2$\\
+To prove, sum first, then transform, and prove equal to, transform first then sum.\\
+\textbf{Energy}: 
+\begin{equation*}
+    E = \int_{t_1}^{t_2} |x(t)|^2 dt = \int_{t_1}^{t_2}(x^2_{Re}(t)+x^2_{Im}(t))dt
+\end{equation*}
+for total energy, $t_1=-\infty, t_2 = \infty$.\\
+\textbf{Power}:
+\begin{equation*}
+    P_{avg} = \frac{1}{t_2-t_1}E = \frac{1}{t_2-t_1}\int_{t_1}^{t_2}(x^2_{Re}(t)+x^2_{Im}(t))dt
+\end{equation*}
+(In discrete time, the denominator is $n_2-n_1+1$). For total, both limits tend to $\infty$.\\
+\textbf{Period}: $\exists T \neq 0 | x(t) = x(t+T) ~\forall t \implies \text{periodic}$.\\
+Minimum T that fulfills conditions is $T_0$, fundamental period.
+For two added signals, $T = LCM(T_1,T_2)$.\\
+$T(\sin(\omega t)) = \frac{2\pi}{\omega}$\\
+\textbf{Parity}:\\
+\underline{Even (+)}: $x(t)=x(-t)$\\
+\underline{Odd (-)}: $x(t) = -x(-t)$\\
+\begin{equation*}
+    x = even+odd = \frac{x(t)+x(-t)}{2}+\frac{x(t)-x(-t)}{2}
+\end{equation*}
+\textbf{Complex Exponential}:
+\begin{align*}
+    x(t) = Ce^{\alpha t} &= |C|\cdot e^{\sigma t}\cdot e^{j(\omega t +\phi)} \\
+    &= |C|\cdot e^{\sigma t}\cdot (\cos(\omega t +\phi)+\sin(\omega t +\phi))
+\end{align*}
+$\omega = 2\pi/T$ is the fundamental frequency.
+\begin{align*}
+    P(t) = |C|^2w^{2\sigma t}\\
+    E_\infty = \infty , P_\infty = C^2
+\end{align*}
+\underline{HRCEs}: $x_k(t) = e^{jk\omega_0 t}$
+\section*{Transformations}
+\textbf{Time Shift}:$x(t)\rightarrow x(t-t_0)$.Moves signal right by $t_0$.\\
+\textbf{Time Reversal}:$x(t)\rightarrow x(-t)$.Reflects signal about y-axis.\\
+\textbf{Time Scale}:$x(t)\rightarrow x(\alpha t)$.Widens signal by $\frac{1}{\alpha}$.
+\section*{Complex Exponential}
+\textbf{DTCE}:
+$x[n] = |C|\cdot e^{\sigma n} \cdot e^{j\omega n +\phi}$\\
+Has exponential envelope $|C|e^{\sigma t}$.\\
+\begin{equation*}
+    N_0 = LCM\left(T = \frac{2\pi}{\omega}, 1\right)
+\end{equation*}
+For sum, $N = LCM(N_1,N_2)$.\\
+If no $\pi$ in $\omega$, or $\omega$ is irrational, the signal is not periodic.
+$0\leq \omega < 2\pi$. Speed up for $\omega\approx\pm\pi$, slow at borders.\\
+\underline{DTHRCEs}: $x_k[n] = e^{jk(\frac{2\pi}{N})n}$\\
+Only N distinct members in the HRCE: $k = 0 \ldots N-1$.
+\section*{Special Signals}
+\textbf{DT}:\\
+$\delta[n] = 0 ~\forall~ n \neq 0,\text{ else } 1$.\\
+$u[n] =\sum_{k=0}^{\infty}\delta[n-k] = 1 ~\forall~ n\geq 0$\\
+$x[n] = \sum_{k=-\infty}^{\infty}x[k]\delta[n-k]$\\
+\textbf{CT}:\\
+$\int_{-\infty}^{\infty}\delta(t) = 1$
+\section*{System Classifications}
+\textbf{Series}:$x \rightarrow [S1]\rightarrow[S2]\rightarrow y$\\
+\textbf{Parallel}:
+\begin{align*}
+    &\uparrow\rightarrow [S1] \rightarrow \downarrow\\
+    &x ~~~~~~~~~~~~~ + \rightarrow y\\
+    &\downarrow\rightarrow [S2]\rightarrow \uparrow
+\end{align*}
+\textbf{Feedback}:
+\begin{align*}
+    x\rightarrow &+\rightarrow [S1] \rightarrow y\\
+    &\uparrow\leftarrow [S2]\leftarrow \downarrow
+\end{align*}
+\section*{Properties}
+\textbf{Memory}: if $y(t) = f(x(T)) | T\neq t_0$, the system has memory.\\
+\textbf{Invertible}: $x\rightarrow [S]\rightarrow [S^{-1}]\rightarrow x$
+\begin{equation*}
+    \forall x_1, x_2 | x_1\neq x_2 \implies y_1\neq y_2 
+\end{equation*}
+Can be proven if $x$ as a function of $y$ is defined across all $t$.\\
+\textbf{Causal}: $y(t) = \sum_{T=-\infty}^{t} f(x(T))$. No dependence on future values of t.\\
+\textbf{Stable}: $|x(t)|<B \implies |y(t)|<M$ for finite B, M.\\
+\textbf{Time Invariant}: $x(t) \rightarrow y(t) \implies x(t-t_0) \rightarrow y(t-t_0)$.
+Scaling, or having a function of $t$ outside, like ($tx(t)$), will be time invariant.
+\section*{LTI}
+Linear and Time Invariant system.
+\end{document}

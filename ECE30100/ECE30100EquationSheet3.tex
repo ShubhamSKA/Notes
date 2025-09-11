@@ -1,0 +1,270 @@
+\documentclass[8pt]{extarticle}
+
+\usepackage{graphicx}
+\usepackage[a4paper, margin=0.5in]{geometry}
+\usepackage{amsmath}
+\usepackage{steinmetz}
+\usepackage{circuitikz}
+\usepackage{placeins}
+
+
+\begin{document}
+\section*{Classifications}
+\pagestyle{empty}
+\textbf{Linear}: $\alpha_1 x_1(t)+\alpha_2 x_2(t) = \alpha_1 y_1(t)+\alpha_2 y_2(t) ~\forall~ \alpha_1,\alpha_2$\\
+To prove, sum first, then transform, and prove equal to, transform first then sum.\\
+\textbf{Energy}:
+\begin{equation*}
+    E = \int_{t_1}^{t_2} |x(t)|^2 dt = \int_{t_1}^{t_2}(x^2_{Re}(t)+x^2_{Im}(t))dt
+\end{equation*}
+for total energy, $t_1=-\infty, t_2 = \infty$.\\
+\textbf{Power}:
+\begin{equation*}
+    P_{avg} = \frac{1}{t_2-t_1}E = \frac{1}{t_2-t_1}\int_{t_1}^{t_2}(x^2_{Re}(t)+x^2_{Im}(t))dt
+\end{equation*}
+(In discrete time, the denominator is $n_2-n_1+1$). For total, both limits tend to $\infty$.\\
+\textbf{Period}: $\exists T \neq 0 | x(t) = x(t+T) ~\forall t \implies \text{periodic}$.\\
+Minimum T that fulfills conditions is $T_0$, fundamental period.
+For two added signals, $T = LCM(T_1,T_2)$.\\
+$T(\sin(\omega t)) = \frac{2\pi}{\omega}$\\
+\textbf{Parity}:\\
+\underline{Even (+)}: $x(t)=x(-t)$\\
+\underline{Odd (-)}: $x(t) = -x(-t)$\\
+\begin{equation*}
+    x = even+odd = \frac{x(t)+x(-t)}{2}+\frac{x(t)-x(-t)}{2}
+\end{equation*}
+\textbf{Complex Exponential}:
+\begin{align*}
+    x(t) = Ce^{\alpha t} & = |C|\cdot e^{\sigma t}\cdot e^{j(\omega t +\phi)}                       \\
+                         & = |C|\cdot e^{\sigma t}\cdot (\cos(\omega t +\phi)+\sin(\omega t +\phi))
+\end{align*}
+$\omega = 2\pi/T$ is the fundamental frequency.
+\begin{align*}
+    P(t) = |C|^2w^{2\sigma t} \\
+    E_\infty = \infty , P_\infty = C^2
+\end{align*}
+\underline{HRCEs}: $x_k(t) = e^{jk\omega_0 t}$
+\section*{Transformations}
+\textbf{Time Shift}:$x(t)\rightarrow x(t-t_0)$.Moves signal right by $t_0$.\\
+\textbf{Time Reversal}:$x(t)\rightarrow x(-t)$.Reflects signal about y-axis.\\
+\textbf{Time Scale}:$x(t)\rightarrow x(\alpha t)$.Widens signal by $\frac{1}{\alpha}$.
+\section*{Complex Exponential}
+\textbf{DTCE}:
+$x[n] = |C|\cdot e^{\sigma n} \cdot e^{j\omega n +\phi}$\\
+Has exponential envelope $|C|e^{\sigma t}$.\\
+\begin{equation*}
+    N_0 = LCM\left(T = \frac{2\pi}{\omega}, 1\right)
+\end{equation*}
+For sum, $N = LCM(N_1,N_2)$.\\
+If no $\pi$ in $\omega$, or $\omega$ is irrational, the signal is not periodic.
+$0\leq \omega < 2\pi$.
+\\Speed up for $\omega\approx\pm\pi$, slow at borders, that is for $k=\lfloor\frac{N}{2}\rfloor  or \lceil\frac{N}{2}\rceil$.\\
+\underline{DTHRCEs}: $x_k[n] = e^{jk(\frac{2\pi}{N})n}$\\
+Only N distinct members in the HRCE: $k = 0 \ldots N-1$.
+\section*{Special Signals}
+\textbf{DT}:\\
+$\delta[n] = 0 ~\forall~ n \neq 0,\text{ else } 1$.\\
+$u[n] =\sum_{k=0}^{\infty}\delta[n-k] = 1 ~\forall~ n\geq 0$\\
+$x[n] = \sum_{k=-\infty}^{\infty}x[k]\delta[n-k]$\\
+\textbf{CT}:\\
+$\int_{-\infty}^{\infty}\delta(t) = 1$
+\section*{System Classifications}
+\textbf{Series}:$x \rightarrow [S1]\rightarrow[S2]\rightarrow y$\\
+\textbf{Parallel}:
+\begin{align*}
+     & \uparrow\rightarrow [S1] \rightarrow \downarrow \\
+     & x ~~~~~~~~~~~~~ + \rightarrow y                 \\
+     & \downarrow\rightarrow [S2]\rightarrow \uparrow
+\end{align*}
+\textbf{Feedback}:
+\begin{align*}
+    x\rightarrow & +\rightarrow [S1] \rightarrow y              \\
+                 & \uparrow\leftarrow [S2]\leftarrow \downarrow
+\end{align*}
+\section*{Properties}
+\textbf{Memory}: if $y(t) = f(x(T)) | T\neq t_0$, the system has memory.\\
+\textbf{Invertible}: $x\rightarrow [S]\rightarrow [S^{-1}]\rightarrow x$
+\begin{equation*}
+    \forall x_1, x_2 | x_1\neq x_2 \implies y_1\neq y_2
+\end{equation*}
+Can be proven if $x$ as a function of $y$ is defined across all $t$.\\
+\textbf{Causal}: $y(t) = \sum_{T=-\infty}^{t} f(x(T))$. No dependence on future values of t.\\
+\textbf{Stable}: $|x(t)|<B \implies |y(t)|<M$ for finite B, M.\\
+\textbf{Time Invariant}: $x(t) \rightarrow y(t) \implies x(t-t_0) \rightarrow y(t-t_0)$.
+Scaling, or having a function of $t$ outside, like ($tx(t)$), will \textbf{NOT} be time invariant.
+\section*{SinCos, etc.}
+\begin{align*}
+    \cos(x)=\frac{e^{jx}+e^{-jx}}{2} ~,~ \sin(x)=\frac{e^{jx}-e^{-jx}}{2j} ~,~ \omega = \frac{2\pi}{T}= \frac{2\pi}{N}
+\end{align*}
+$\mathbf{F(x)}=X(e^{j\omega})$ has a period of $2\pi$\\
+$x = |x|e^{j\phase x}$
+\subsection*{Classifications}
+Memoryless: $h[k]=0=h(t)~\forall~k,t\neq 0$ \textbf{OR} $y(t) = f(x(T))|T\neq t
+    \implies \text{memory}$\\ Invertible: $\exists h_I |h*h_I=\delta$ \textbf{OR}
+$H(j\omega)\neq 0$ \textbf{OR} $H(e^{j\omega})\neq 0$ \textbf{OR} $\forall
+    x_1,x_2|x_1\neq x_2 \implies y_1\neq y_2$\\ Causal: $h[k]=h(t)=0 ~\forall~
+    k,t<0$ \textbf{OR} $y(t) = \sum_{T=-\infty}^{t} f(x(T))$. No dependence on
+future values of t.\\ Stable:
+$\sum_{-\infty}^{\infty}|h[k]|<\infty$,$\int_{-\infty}^{\infty}h(\tau)d\tau<\infty$
+\textbf{OR} $H$ is defined \textbf{OR} $|x(t)|<B ~\forall~ t \implies |y(t)|<M
+    ~\forall~ t$ for bounded $B, M$\\
+\section*{Fourier}
+\begin{align*}
+    y(t)=e^{j\omega t}*h(t)=e^{j\omega t}\int_{-\infty}^{\infty}h(\tau)e^{-j\omega \tau}d\tau
+    =e^{j\omega t}|H(j\omega)|e^{j\phase{H}(j\omega)} =\sum_\omega \mathbf{x(e^{j\omega t})H(j\omega)}
+\end{align*}
+\begin{equation*}
+    a_k = \frac{1}{T} \int_{<T>} x(t) e^{-jk\omega_0 t} dt =\frac{X(j\omega)}{T}= \frac{1}{N} \sum_{n=<N>}x[n]e^{-jk\frac{2\pi}{N} n} = \frac{X(e^{jk\omega_0})}{N}
+\end{equation*}
+\begin{equation*}
+    x(t)=\sum_{-\infty}^{\infty}a_ke^{jk\omega_0t}=\frac{1}{2\pi}\int_{-\infty}^{\infty}X(j\omega)e^{j\omega t}d\omega ~,~
+    x[n]=\sum_{k=<N>}a_k e^{jk\omega_0 n} =  \frac{1}{2\pi}\int_{2\pi} X(e^{j\omega})e^{j\omega n}d\omega
+\end{equation*}
+\begin{eqnarray*}
+    X(j\omega) = 2\pi \sum_{k=-\infty}^{\infty}a_k\delta (\omega - \frac{2\pi K}{T}) = \int_{-\infty}^{\infty} x(t)e^{-j\omega t}dt ~,~ X(e^{j\omega}) = 2\pi \sum_{k=-\infty}^{\infty}a_k \delta(\omega - \frac{2\pi K}{N}) = \sum_{n=-\infty}^{\infty}x[n]e^{-j\omega n}
+\end{eqnarray*}
+\begin{equation*}
+    \sum_{m=-\infty}^{n}x[m]\rightarrow \frac{1}{1-e^{-j\omega}}X(e^{j\omega})+\pi X(e^{j0})\sum_{k=-\infty}^{\infty}\delta(\omega-2\pi k)
+\end{equation*}
+Real $x(t)$: $a_k=a^*_{-k}$\\
+Even $x(t)$: $a_k=a_{-k}$\\
+Duality: $\mathbf{F}\{X(t)\} = 2\pi\cdot x(-\omega)$ \\
+Convergence: $E_\infty < \infty$
+\section*{LTI}
+$x(t)\rightarrow [H_1]\rightarrow[H_2]\rightarrow y(t) = x(t)\rightarrow[H_1\cdot H_2]\rightarrow y(t)$\\
+\begin{center}
+    \includegraphics*[width = 100px]{images/feedback.png}
+\end{center}
+$Y(j\omega) = H_1(j\omega)(X(j\omega)+H_2(j\omega)Y(j\omega)) = \frac{H_1(j\omega)}{1-H_1(j\omega)H_2(j\omega)}$\\
+$H(j\omega) = \frac{Y(j\omega)}{X(j\omega)}$
+\section*{Diff}
+Nth order linear constant diffEq:
+\begin{equation*}
+    \sum_{k=0}^{N}a_ky[n-k] = \sum_{k=0}^{M}b_kx[n-k] \implies H(e^{j\omega}) = \frac{\sum_{k=0}^{M} b_ke^{-jk\omega}}{\sum_{k=0}^{N} a_ke^{-jk\omega}}
+\end{equation*}
+\begin{equation*}
+    \sum_{k=0}^{N}a_k\frac{d^ky(t)}{dt^k} = \sum_{k=0}^{M}b_k\frac{d^kx(t)}{dt^k} \implies H(j\omega) = \frac{\sum_{k=0}^{M}b_k(j\omega)^k}{\sum_{k=0}^{N}a_k(j\omega)^k}
+\end{equation*}
+\begin{center}
+    \includegraphics*[width = 190px]{images/blockdiagram.png}
+\end{center}
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{|l|l|l|l|}
+        \hline
+        \textbf{Property}            & \textbf{Aperiodic Signal}             & \textbf{Fourier Transform}                                                        & \textbf{Coefficients}                     \\ \hline
+        Linearity                    & $a x(t) + b y(t)$                     & $a X(j\omega) + b Y(j\omega)$                                                     & $a\times a_k+b\times b_k$                 \\ \hline
+        Time Shifting                & $x(t - t_0)$                          & $e^{-j\omega t_0} X(j\omega)$                                                     & $a_k e^{-j\omega_0 t_0}$                  \\ \hline
+        Frequency Shifting           & $e^{j\omega_0 t} x(t)$                & $X(j(\omega - \omega_0))$                                                         & $a_{k-n}$                                 \\ \hline
+        Conjugation                  & $x^*(t)$                              & $X^*(-j\omega)$                                                                   & $a^*_{-k}$                                \\ \hline
+        Time Reversal                & $x(-t)$                               & $X(-j\omega)$                                                                     & $a_{-k}$                                  \\ \hline
+        Time/Frequency Scaling       & $x(at)$                               & $\frac{1}{|a|} X\left(\frac{j\omega}{a}\right)$                                   & $a_k$ (with scaled period)                \\ \hline
+        Convolution                  & $x(t) * y(t)$                         & $X(j\omega) Y(j\omega)$                                                           & $a_k b_k$                                 \\ \hline
+        Multiplication               & $x(t) y(t)$                           & $\frac{1}{2\pi} \int_{-\infty}^{\infty} X(j\theta) Y(j(\omega - \theta)) d\theta$ & convolution of $a_k$ and $b_k$            \\ \hline
+        Differentiation in Time      & $\frac{d}{dt} x(t)$                   & $j\omega X(j\omega)$                                                              & $j k \omega_0 a_k$                        \\ \hline
+        Integration                  & $\int_{-\infty}^t x(\tau) d\tau$      & $\frac{1}{j\omega} X(j\omega) + \pi X(0) \delta(\omega)$                          & $\frac{a_k}{j k \omega_0}$ (if $a_0 = 0$) \\ \hline
+        Differentiation in Frequency & $t x(t)$                              & $j \frac{d}{d\omega} X(j\omega)$                                                  & $-j \frac{d}{d\omega_0} a_k$              \\ \hline
+        Conjugate Symmetry           & $x(t)$ real                           & $\begin{cases}
+                                                                                        X(j\omega) = X^*(-j\omega)                     \\
+                                                                                        \text{Re}[X(j\omega)] = \text{Re}[X(-j\omega)] \\
+                                                                                        \text{Im}[X(j\omega)] = -\text{Im}[X(-j\omega)]
+                                                                                    \end{cases}$                                 & $a_k = a^*_{-k}$                                                              \\ \hline
+        Even/Odd Decomposition       & $x_e(t), x_o(t)$                      & $\text{Re}[X(j\omega)], j \text{Im}[X(j\omega)]$                                  & $\text{Re}[a_k], \text{Im}[a_k]$          \\ \hline
+        Parseval's Theorem           & $\int_{-\infty}^{\infty} |x(t)|^2 dt$ & $= \frac{1}{2\pi} \int_{-\infty}^{\infty} |X(j\omega)|^2 d\omega$                 & $\sum_{k=-\infty}^{\infty} |a_k|^2$       \\ \hline
+    \end{tabular}
+\end{table}
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{|l|l|l|}
+        \hline
+        \textbf{Signal}                                            & \textbf{Fourier Transform}                                                         & \textbf{FS Coefficients (if periodic)}    \\ \hline
+        $\sum_{-\infty}^{\infty} a_k e^{j k \omega_0 t}$           & $2\pi \sum_{-\infty}^{\infty} a_k \delta(\omega - k\omega_0)$                      & $a_k$                                     \\ \hline
+        $e^{j\omega_0 t}$                                          & $2\pi \delta(\omega - \omega_0)$                                                   & $a_1 = 1$, else 0                         \\ \hline
+        $\cos(\omega_0 t)$                                         & $\pi[\delta(\omega - \omega_0) + \delta(\omega + \omega_0)]$                       & $a_1 = a_{-1} = \frac{1}{2}$, else 0      \\ \hline
+        $\sin(\omega_0 t)$                                         & $\frac{\pi}{j}[\delta(\omega - \omega_0) - \delta(\omega + \omega_0)]$             & $a_1 = -a_{-1} = \frac{1}{2j}$, else 0    \\ \hline
+        $x(t) = 1$                                                 & $2\pi \delta(\omega)$                                                              & $a_0 = 1$, $a_k = 0$, $k \neq 0$          \\ \hline
+        Square Wave  ($|t|<T_1$), $x(t)=x(t+T)$                    & $\sum_{-\infty}^{\infty} \frac{2\sin(k\omega_0 T_1)}{k}\delta(\omega - k\omega_0)$ & $a_k = \frac{\sin(k \omega_0) T_1}{k\pi}$ \\ \hline
+        $\sum_{n=-\infty}^{\infty} \delta(t-NT)$                   & $\frac{2\pi}{T}\sum_{k=-\infty}^{\infty}\delta(\omega-\frac{2\pi  k}{T})$          & $a_k = \frac{1}{T}$                       \\ \hline
+        Rectangular pulse  (1 for $|t|<T_1$)                       & $\frac{2 \sin(\omega T_1)}{\omega}$                                                & —                                         \\ \hline
+        $sin(Wt)/\pi t$                                            & 1 for $|\omega|<W$                                                                 & —                                         \\ \hline
+        $\delta(t)$                                                & $1$                                                                                & —                                         \\ \hline
+        $u(t)$                                                     & $\frac{1}{j\omega} + \pi \delta(\omega)$                                           & —                                         \\ \hline
+        $\delta(t - t_0)$                                          & $e^{-j\omega t_0}$                                                                 & —                                         \\ \hline
+        $e^{-a t} u(t)$, $\text{Re}\{a\}>0$                        & $\frac{1}{a + j\omega}$                                                            & —                                         \\ \hline
+        $t^{(n-1)}/(n-1)! \cdot e^{-a t} u(t)$, $\text{Re}\{a\}>0$ & $\frac{1}{(a + j\omega)^n}$                                                        & —                                         \\ \hline
+    \end{tabular}
+\end{table}
+\begin{table}[h]
+    \centering
+    \begin{tabular}{|l|l|l|l|}
+        \hline
+        \textbf{Property}            & \textbf{Aperiodic Signal}                    & \textbf{Fourier Transform}                                                                     & \textbf{Coefficients}                               \\ \hline
+        Linearity                    & $a x[n] + b y[n]$                            & $a X(e^{j\omega}) + b Y(e^{j\omega})$                                                          & $a a_k + b b_k$                                     \\ \hline
+        Time Shifting                & $x[n - n_0]$                                 & $e^{-j\omega n_0} X(e^{j\omega})$                                                              & $a_k e^{-j\omega_0 n_0}$                            \\ \hline
+        Frequency Shifting           & $e^{j\omega_0 n} x[n]$                       & $X(e^{j(\omega - \omega_0)})$                                                                  & $a_{k - m} mod(N)$                                         \\ \hline
+        Conjugation                  & $x^*[n]$                                     & $X^*(e^{-j\omega})$                                                                            & $a^*_{-k}$                                          \\ \hline
+        Time Reversal                & $x[-n]$                                      & $X(e^{-j\omega})$                                                                              & $a_{-k}mod(N)$                                            \\ \hline
+        Time Expansion               & $x_a[n] = x[n/k], n = \text{multiple of } k$ & $X(e^{j\omega})$                                                                               & $a_{k/k'}$ (nonzero at multiples)                   \\ \hline
+        Convolution                  & $x[n] * y[n]$                                & $X(e^{j\omega}) Y(e^{j\omega})$                                                                & $a_k * b_k$                                         \\ \hline
+        Multiplication               & $x[n] y[n]$                                  & $\frac{1}{2\pi} \int_{-\pi}^{\pi} X(e^{j\theta}) Y(e^{j(\omega - \theta)}) d\theta$            & $a_k * b_k$ in frequency domain                     \\ \hline
+        Difference in Time           & $x[n] - x[n - 1]$                            & $(1 - e^{-j\omega}) X(e^{j\omega})$                                                            & $a_k - a_{k-1}$                                     \\ \hline
+        Accumulation                 & $\sum_{k = -\infty}^{n} x[k]$                & $\frac{1}{1 - e^{-j\omega}} X(e^{j\omega}) + \pi X(e^{j\omega}) \sum \delta(\omega - 2\pi k)$  & $\frac{a_k}{1 - e^{-j\omega_0}}$ (approximate form) \\ \hline
+        Differentiation in Frequency & $n x[n]$                                     & $j \frac{d X(e^{j\omega})}{d\omega}$                                                           & $j \frac{d a_k}{d\omega_0}$ or $-j k a_k$           \\ \hline
+        Conjugate Symmetry           & $x[n]$ real                                  & $\begin{cases}
+                                                                                               X(e^{j\omega}) = X^*(e^{-j\omega})                     \\
+                                                                                               \text{Re}[X(e^{j\omega})] = \text{Re}[X(e^{-j\omega})] \\
+                                                                                               \text{Im}[X(e^{j\omega})] = -\text{Im}[X(e^{-j\omega})]
+                                                                                           \end{cases}$ & $a_k = a^*_{-k}$                                                         \\ \hline
+        Even/Odd Decomposition       & $x[n] = x_e[n] + x_o[n]$                     & $\text{Re}[X(e^{j\omega})], j \text{Im}[X(e^{j\omega})]$                                       & $\text{Re}[a_k], \text{Im}[a_k]$                    \\ \hline
+        Parseval's Theorem           & $\sum_{n=-\infty}^{\infty} |x[n]|^2$         & $= \frac{1}{2\pi} \int_{-\pi}^{\pi} |X(e^{j\omega})|^2 d\omega$                                & $\sum_{k=-\infty}^{\infty} |a_k|^2$                 \\ \hline
+    \end{tabular}
+\end{table}
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{|l|l|l|}
+        \hline
+        \textbf{Signal}                               & \textbf{Fourier Transform}                                                                     & \textbf{FS Coefficients (if periodic)}                                                    \\ \hline
+        $\sum a_k e^{j \frac{2\pi}{N} k n}$           & $2\pi \sum a_k \delta(\omega - \frac{2\pi k}{N})$                                              & $a_k$                                                                                     \\ \hline
+        $e^{j\omega_0 n}$                             & $2\pi\sum_r \delta(\omega - \omega_0 - 2\pi r)$                                                & $a_1 = 1$, $k=m\pm N,m\pm 2N$                                                             \\ \hline
+        $\cos(\omega_0 n)$                            & $\pi\sum_r[\delta(\omega - \omega_0 - 2\pi r) + \delta(\omega + \omega_0 - 2\pi r)]$           & $a_{\pm k} = \frac{1}{2}$ for $k=\pm m$                                                   \\ \hline
+        $\sin(\omega_0 n)$                            & $\frac{\pi}{j}\sum_r[\delta(\omega - \omega_0 - 2\pi r) - \delta(\omega + \omega_0 - 2\pi r)]$ & $a_1 = -a_{-1} = \frac{1}{2j}$                                                            \\ \hline
+        $x[n] = 1$                                    & $2\pi \sum_r \delta(\omega - 2\pi r)$                                                          & $a_k = 1, k=\pm mN$                                                                       \\ \hline
+        $x[n]=1$ for $|n|<N_1$, $x[n+N]=x[n]$         & $2\pi \sum_{k=-\infty}^{\infty} a_k \delta(\omega - 2\pi k/N)$                                 & $a_{mN} = \frac{2N_1+1}{N}, a_{!mN} = \frac{\sin((2\pi k/N)(N_1+1/2))}{N\sin(2\pi k/2N)}$ \\ \hline
+        $\sum_{k=-\infty}^{\infty}\delta[n-kN]$       & $\frac{2\pi}{N}\sum_{k=-\infty}^{\infty}\delta(\omega-2\pi k/N)$                               & $a_k = \frac{1}{N}$                                                                       \\ \hline
+        $x[n] = 1$ for $|n|<N_1$                      & $\frac{\sin(\omega (N_1 +1/2))}{\sin(\omega/2)}$                                               & —                                                                                         \\ \hline
+        $\sin(Wn)/\pi n, 0<W<\pi$                     & $1$ for $|\omega|<W$, periodic                                                                 & —                                                                                         \\ \hline
+        $\delta[n]$                                   & $1$                                                                                            & —                                                                                         \\ \hline
+        $u[n]$                                        & $\frac{1}{1 - e^{-j\omega}} + \pi \sum \delta(\omega - 2\pi k)$                                & —                                                                                         \\ \hline
+        $\delta[n - n_0]$                             & $e^{-j\omega n_0}$                                                                             & —                                                                                         \\ \hline
+        $a^n u[n], |a| < 1$                           & $\frac{1}{(1 - a e^{-j\omega})}$                                                               & —                                                                                         \\ \hline
+        $(n+1)a^n u[n], |a| < 1$                      & $\frac{1}{(1 - a e^{-j\omega})^2}$                                                             & —                                                                                         \\ \hline
+        $\frac{(n+r-1)!}{n!(r-1)!} a^n u[n], |a| < 1$ & $\frac{1}{(1 - a e^{-j\omega})^r}$                                                             & —                                                                                         \\ \hline
+        $\sum_{k=-\infty}^{n}x[n], a_0=0$             & —                                                                                              & $\frac{a_k}{1-e^{-jk(2\pi/N)}}$                                                           \\ \hline
+    \end{tabular}
+\end{table}
+\FloatBarrier
+\section*{Amplitude and Frequency Modulation}
+\begin{itemize}
+    \item $c(t) = e^{j\omega_c t+\theta_c}\implies Y(j\omega) = X(j\omega - j\omega_c)$.\\
+          Note that $x(t) = y(t)e^{-j\omega_c t}$\\
+          and $y(t) = x(t)\cos(\omega_c t) +jx(t)\sin(\omega_c t)$
+    \item $c(t) = \cos(\omega_c t + \theta_c) \implies Y(j\omega) = \frac{1}{2}[X(j\omega-j\omega_c)+X(j\omega+\omega_c)]$\\
+          $c(t) = \sin(\omega_c t + \theta_c) \implies Y(j\omega) = \frac{1}{2j}[X(j\omega-j\omega_c)-X(j\omega+\omega_c)]$\\
+          Note that $x(t)$ is only recoverable if $\omega_M<\omega_{co}<2\omega_c-\omega_M$, where $\omega_M$ is the bandwidth of $x(j\omega)$\\
+          Demodulation: $w(t) = x(t)\cos^2(\omega_c t)$\\
+          \begin{center}
+              \includegraphics*[width = 180px]{images/demodulation.png}
+          \end{center}
+\end{itemize}
+\section*{Sampling}
+Sampling is done using an impulse train, that is:
+\begin{align*}
+    p(t) = \sum_{n=-\infty}^{\infty}\delta(t-nT)                                   \\
+    P(j\omega) = \frac{2\pi}{T}\sum_{k=-\infty}^{\infty}\delta(\omega - k\omega_s) \\
+    X_p(j\omega) = \frac{1}{T}\sum_{k=-\infty}^{\infty} X(j\omega-jk\omega_s)
+\end{align*}
+For no overlap: $\omega_s = \frac{2\pi}{T} > 2\omega_M$
+\end{document}

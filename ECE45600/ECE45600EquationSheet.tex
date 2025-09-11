@@ -1,0 +1,94 @@
+\documentclass[twocolumn]{article}
+
+\usepackage{graphicx}
+\usepackage[a4paper, margin=0.5in]{geometry}
+\usepackage{amsmath}
+\usepackage{circuitikz}
+
+\begin{document}
+
+\section*{Inverter Chain}
+\pagestyle{empty}
+\begin{equation*}
+    F = \frac{C_L}{C_{g_1}}:~~ C_L=\text{Load cap, } C_{g_1}=\text{Internal cap}
+\end{equation*}
+\begin{equation*}
+    f = \sqrt[N]{F}:~~ f=\text{scaling factor, } N=\text{\# inverters}
+\end{equation*}
+\begin{equation*}
+    t_p = Nt_{p_0}\left(1+\frac{f}{\gamma}\right):~~t_p=\text{prop delay}, t_{p_0} = \text{single  prop delay}
+\end{equation*}
+\begin{equation*}
+    \gamma = \frac{\text{intrinsic capacitance at output}}{\text{input gate capacitance}}
+\end{equation*}
+\begin{equation*}
+    \sum C_L = \sum_{k=0}^{N} (f^N+\gamma f^N)C_{g_1}+C_L = C_{g_1}((1+\gamma)(1+f)+F)
+\end{equation*}
+Note: the formula above includes the input capcacitance.
+\begin{equation*}
+    P_{diss} = (\textbf{freq})\alpha_{0\rightarrow 1}V_{DD}^2\sum C_L:~~ \alpha_{0\rightarrow 1}=\text{activity factor}
+\end{equation*}
+\section*{Formula to Circuit}
+\begin{enumerate}
+    \item Get formula to the form $\bar{X}$
+    \item The pull-up of the circuit will be composed entirely of PMOS:
+          \begin{itemize}
+              \item AND: parallel
+              \item OR: series
+          \end{itemize}
+          The pull-down will be the inverse, that is NMOS:
+          \begin{itemize}
+              \item AND: series
+              \item OR: parallel
+          \end{itemize}
+    \item To scale the transistors, the initial scale will be that of the minimized
+          inverter. The multiplication factor of the transistors will be such that the resistance of each path in each netweork is the same as that of the corresponding path in an inverter.\\
+          $C_{unit}$ is sum of the scaling of the PMOS and the NMOS for the given input.
+\end{enumerate}
+\section*{Gate Circuit}
+Let us assume that a fast inverter has a PMOS to NMOS width ratio of $a$. The following tells us what the electrical effort (\textbf{p}) and the logical effort (\textbf{g}) are:
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+    \hline
+    gate& $C_{unit}$& p & g\\
+    \hline
+    inverter&$a+1$ & 1 & 1\\
+    \hline
+    n-input NAND&$n+a$&$n$&$\frac{n+a}{a+1}$\\
+    \hline
+    n-input NOR&$1+an$&$n$&$\frac{1+an}{a+1}$\\
+    \hline
+    n-input MUX&$n(1+a)$&$an$&$a$\\
+    \hline
+    n-input XOR&$?$&$n*2^{n-1}$&?\\
+    \hline
+\end{tabular}
+\end{center}
+\begin{equation*}
+    b=\frac{C_{on}+C_{off}}{C_{on}}
+\end{equation*}
+\begin{equation*}
+    t_p = t_{p_0}\left(p+g\frac{f}{\gamma}\right)
+\end{equation*}
+\begin{equation*}
+    B = \prod_{i} b_i~;~G = \prod_{i} g_i
+\end{equation*}
+\begin{equation*}
+    F = \frac{C_L}{C_{g_1}}:~~ C_L=\text{Load cap, } C_{g_1}=\text{Internal cap}
+\end{equation*}
+\begin{equation*}
+    H = GFB
+\end{equation*}
+\begin{equation*}
+    h = \sqrt[N]{H}= g_i f_i :~~ h=\text{gate effort, }f=\text{eff. fan-out} 
+\end{equation*}
+
+\begin{equation*}
+    S_n = \frac{hS_{n-1}}{b_{n-1}g_n}:~~ S_n=\text{scaling factor, }
+\end{equation*}
+~~~~~$S_0=1$ unless otherwise stated.
+\begin{equation*}
+    D = t_{p_{tot}} = \sum_{i} t_{p_i} = t_{p_0}\left(\sum_{i=1}^{N}p_i \frac{Nh}{\gamma}\right)
+\end{equation*}
+
+\end{document}

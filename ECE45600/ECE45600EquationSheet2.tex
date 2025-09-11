@@ -1,0 +1,192 @@
+\documentclass[twocolumn,8pt]{extarticle}
+
+\usepackage{graphicx}
+\usepackage[a4paper, margin=0.5in]{geometry}
+\usepackage{amsmath}
+\usepackage{circuitikz}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning}
+
+
+\begin{document}
+\pagestyle{empty}
+\section*{Circuit Design Styles}
+\begin{tabular}{|c|c|}
+    \hline
+    DCVSL               & \includegraphics*[height=50px]{images/dcvsl_logic.png}      \\
+    \hline
+    Pass Transistor     & \includegraphics*[height=50px]{images/pt_logic.png}         \\
+    \hline
+    Transmission Gate   & \includegraphics*[height=50px]{images/tx_logic.png}         \\
+    \hline
+    Dynamic CMOS/Domino & \includegraphics*[height=50px]{images/domino_logic.png}     \\
+    \hline
+    NP                  & \includegraphics*[height=50px]{images/np_logic.png}         \\
+    \hline
+    Differential Domino & \includegraphics*[height=50px]{images/dif_domino_logic.png} \\
+    \hline
+    TSPC                & \includegraphics*[height=50px]{images/tspc.png}             \\
+    \hline
+\end{tabular}
+\section*{Gate Circuit}
+The pull-up of the circuit will be composed entirely of PMOS:
+AND: parallel,
+OR: series.
+The pull-down will be the inverse, that is NMOS:
+AND: series,
+OR: parallel.\\
+Let us assume that a fast inverter has a PMOS to NMOS width ratio of $a$. The following tells us what the electrical effort (\textbf{p}) and the logical effort (\textbf{g}) are:
+\begin{center}
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+        gate         & $C_{unit}$ & p   & g                  \\
+        \hline
+        inverter     & $a+1$      & 1   & 1                  \\
+        \hline
+        n-input NAND & $n+a$      & $n$ & $\frac{n+a}{a+1}$  \\
+        \hline
+        n-input NOR  & $1+an$     & $n$ & $\frac{1+an}{a+1}$ \\
+        \hline
+    \end{tabular}
+\end{center}
+\begin{align*}
+    b=\frac{C_{on}+C_{off}}{C_{on}}                                                               \\
+    t_p = t_{p_0}\left(p+g\frac{f}{\gamma}\right)                                                 \\
+    B = \prod_{i} b_i~;~G = \prod_{i} g_i; H = GFB                                                \\
+    F = \frac{C_L}{C_{g_1}}:~~ C_L=\text{Load cap, } C_{g_1}=\text{Internal cap}                  \\
+    h = \sqrt[N]{H}= g_i f_i :~~ h=\text{gate effort, }f=\text{eff. fan-out}                      \\
+    S_n = \frac{hS_{n-1}}{b_{n-1}g_n}:~~ S_n=\text{scaling factor}                                \\
+    D = t_{p_{tot}} = \sum_{i} t_{p_i} = t_{p_0}\left(\sum_{i=1}^{N}p_i+ \frac{Nh}{\gamma}\right) \\
+\end{align*}
+\section*{Gate-Inverter Chain}
+\begin{enumerate} \setlength{\itemsep}{0pt}
+    \item Determine all parameters:
+          \begin{align*}
+              C_{o,inv} = \gamma C_{g,inv} \\
+              C_{g,pt} = C_{GS} for NMOS   \\
+              C_{o,pt} = C_{GD} for NMOS   \\
+              C_{g,tx} = C_{GS,N}+C_{GD,P} \\
+              C_{o,tx} = C_{GD,N}+C_{GS,P} \\
+              R_{inv} = \frac{R_N+R_P}{2}  \\
+              R_{pt} = R_N                 \\
+              R_{tx} = R_N \parallel R_P   \\
+          \end{align*}
+    \item Find delays of gate and inverter:\\ $t_{p,gate} =
+              0.69*R_g*(C_{o,gate}+C_{g,inv})$\\ $t_{p,inv} =
+              0.69*R_{inv}*(C_{o,inv}+C_{g,gate})$
+    \item Find overall delays:
+          \begin{itemize}\setlength{\itemsep}{0pt}
+              \item $t_{setup} = t_{firstgate}$
+              \item $t_{c\rightarrow q} = \sum t_{notfirstgate}$
+              \item $t_{hold} = t_{00,-ve} = t_{11,+ve}$
+          \end{itemize}
+\end{enumerate}
+\section*{Theory Questions}
+\begin{itemize} \setlength{\itemsep}{0pt}
+    \item \textbf{Static MS DFF}
+          \begin{center}
+              \includegraphics*[width=120px]{images/msdff.png}
+          \end{center}
+          \begin{eqnarray*}
+              t_{setup} = t_{I1,i-t}+t_{T1,t-it}+t_{I3,i-ii}+t_{I2,i-t}\\
+              t_{c\rightarrow q} = t_{T3,t-it}+ t_{I6, i-ii}\\
+          \end{eqnarray*}
+    \item \textbf{RW memory cells}\\
+          DRAM: read then write data to cell. needs periodic refresh. 
+          \begin{center}
+            \includegraphics*[height=50px]{images/dram_cell.png}
+            \includegraphics*[height=50px]{images/3_tran_dram.png} 
+          \end{center}
+          Write by active (W)WL, data on BL. Read by precharge BL, activate (R)WL, direction of charge through C gives !D.\\
+          SRAM: 6 transistors per bit, \includegraphics*[height=10px]{images/sram_cell.png} (WL to NMOS gates, BL, !BL to S,D), no refresh needed. Read by activate WL, precharge BL,!BL to VDD, one will be pulled lower or higher, determining data. Write by data on BL, activate WL, overwrite existing data. $W/L_{M1(NMOS)}>W/L_{Pass}, W/L_{PMOS}<1.8\times W/L_{Pass}$.\\
+          \begin{center}
+              \includegraphics*[width=190px]{images/mem_array.png}
+          \end{center}
+    \item \textbf{NVRW Memory}\\
+          Uses avalanche injection to charge up the floating-gate. When the voltage is removed, the electrons remain trapped, leaving a potential difference. They have a programmable voltage threshold.\\
+          Erasable-Programmable:Has a UV window. UV makes the oxide slightly conductive.Charges on floating gate can be removed.\\
+          Flash $E^2$PROM: Electrons can be accumulated on the floating gate using tunneling injection. Electrons are removed from the floating gate using Fowler-Nordheim tunneling
+          between floating gate and Source (overlapped area).
+          \begin{center}
+              \includegraphics*[width=50px]{images/nvrwm.png}
+          \end{center}
+          For 1.8V flash memory:
+          Programming (writing): 8V on gate, 5V on drain.
+          Erasing: -8.5V on gate, 5V on source (-13.5V overall).
+          Reading: 2V on gate, 0.5V on drain, check current.
+    \item\textbf{Non-overlapping clock/C$^2$MOS}
+          \begin{center}
+              \includegraphics*[width=90px]{images/non_overlap_clk.png}
+              \includegraphics*[width=100px]{images/c2mos_ms.png}
+          \end{center}
+    \item \textbf{Tri-state buffer}
+          \begin{center}
+              \includegraphics*[width=190px]{images/tri-state_buffer.png}
+          \end{center}
+    \item \textbf{Reduced voltage swing}\\
+          $t_p = \frac{C_L V_{swing}}{I_{av}}$.
+          \begin{center}
+              \includegraphics*[width=140px]{images/reduced_vswing.png}
+          \end{center}
+          "flipped" inverter clamps voltage to $(|V_{tp}|, V_{DD}-V_{tn})$, reducing swing to $\approx V_{DD}-2V_{T}$. Second half senses when input reaches threshold, amplifies reduced swing into full-swing output.
+    \item \textbf{Dynamic negative edge-triggered flip-flop}\\
+          This is a posedge trigger, flip the latches and it will be negedge.
+          \begin{center}
+              \includegraphics*[width=90px]{images/tf_ff.png}
+              \includegraphics*[width=90px]{images/pt_ff.png}
+          \end{center}
+          \begin{itemize}\setlength{\itemsep}{0pt}
+              \item $t_{setup} = t_{firstgate}$
+              \item $t_{c\rightarrow q} = \sum t_{notfirstgate}$
+          \end{itemize}
+    \item \textbf{True Single Phase}: refer to TSPC in table.
+    \item \textbf{Pipeline}
+          \begin{center}
+              \includegraphics*[width=90px]{images/pipeline.png}
+          \end{center}
+    \item \textbf{Pre-diffused,pre-wired}:\\A pre-diffused array consists of a silicon wafer with predefined transistors and basic components (like NAND/NOR gates) fabricated in a regular pattern. The interconnections between these components are left unconnected until customization. A pre-wired array goes further by including not just transistors but also predefined logic blocks (e.g., LUTs, RAM, multipliers) and partially pre-routed interconnects. Only a few layers need customization.
+    \item \textbf{Fuse,anti-fuse} Fuse thin metallization that can be blown using high voltage/high current.
+          Anti-fuse :by applying high voltage high field oxide/nitride/oxide (ONO) will be melted
+          and is replaced by Poly (short circuit after programming).
+          Anti-fuse technology is preferred as it reduces the programming time, \textit{\textbf{but only once}}. In a logic design one
+          usually needs to make only a few connection in an array (most fuses/anti-fuses have to be open
+          circuit)
+    \item \textbf{Cross-talk reduction}: Avoid floating nodes.Increase rise/fall times subject to timing constant and direct path power.Use differential signaling in sensitive low-swing wiring network.Do not allow high capacitance between two signal wires.Provide shielding wire (GND,VDD) between two signal lines.
+    \item \textbf{Delay factor}:
+          Miller Effect causes table:
+          \begin{center}
+              \includegraphics*[width=120px]{images/delay_factor.png}
+          \end{center}
+          $t_p = gC_{GND}(0.38R_{wire}+0.69R_{driver})$
+    \item \textbf{Wide Transistors}
+          Multiple smaller parallel transistors ("fingers"), each with a smaller width. The fingers share common Source (S) and Drain (D) regions, alternating between them. The Gate (Poly) runs across all fingers.\\
+          \begin{center}
+              \includegraphics*[width=90px]{images/fingers_wide.png}
+          \end{center}
+    \item\textbf{Ripple carry/even-odd}\\
+          RC: $C_o=AB+BC_i+AC_i$, $S=ABC_i + !C_o(A+B+C_i)$\\
+          EO: remove inverters
+          \begin{center}
+              \includegraphics*[width=90px]{images/full_adder.png}\\
+              \includegraphics*[width=90px]{images/rc_adder.png}
+              \includegraphics*[width=90px]{images/eo_adder.png}\\
+          \end{center}
+
+\end{itemize}
+Edge trigger of FF/Register:
+\begin{center}
+    \includegraphics*[width=80px]{images/edge_trigger.png}
+\end{center}
+Manchester Carry Adder:
+\begin{center}
+    \includegraphics*[width=60px]{images/manchester_chain_bit.png}
+    \includegraphics*[width=60px]{images/dynamic_manchester.png}
+\end{center}
+$S=P \oplus C$, Delay = $(N-1)t_{carry}+t_{sum}$
+Multiplier:
+\begin{center}
+    \includegraphics*[width=100px]{images/multiplier.png}
+\end{center}
+$t_{mult}=[(M-1)+(N-2)]t_{carry}+(N+1)t_{sum}+t_{and}$
+where M,N, are number of x,y bits.
+\end{document}

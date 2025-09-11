@@ -77,7 +77,7 @@
     innerrightmargin=10pt   % Inner right margin
     framemethod=tikz % Disable problematic referencing
     ]{notebox}
-    
+
 \newcommand{\defn}[2]{
         \begin{defbox}
         \noindent\textbf{#1}:\ #2
@@ -173,8 +173,7 @@ input directly.
                     The total energy can be written as: \begin{equation*}
                         E_\infty = \int_{-\infty}^{\infty} |x(t)|^2 dt = \sum_{n = -\infty}^{\infty} |x[n]|^2
                     \end{equation*}
-              \item Power: \\
-                    For CT signals, average power over $(t_1,t_2)$ is \begin{equation*}
+              \item Power: \\ For CT signals, average power over $(t_1,t_2)$ is \begin{equation*}
                         P = \frac{1}{t_2-t_1}E(t_1,t_2)
                     \end{equation*}
                     For DT signals:
@@ -187,99 +186,102 @@ input directly.
                     And finally, instantaneous power is $|x(t)|^2$ or $|x[n]|^2$
           \end{itemize}
           There are three realistic types of signals:\begin{enumerate}
-            \item $E_\infty$ finite: Must have $P_\infty =0$
-            \item $P_\infty$ finite: Must have $e_\infty = \infty$, since we are integrating over time.
-            \item Neither $E_\infty$ nor $P_\infty$ are finite: not practical, but mathematically possible.
+              \item $E_\infty$ finite: Must have $P_\infty =0$
+              \item $P_\infty$ finite: Must have $e_\infty = \infty$, since we are integrating over time.
+              \item Neither $E_\infty$ nor $P_\infty$ are finite: not practical, but mathematically
+                    possible.
           \end{enumerate}
           \note{ We cannot have finite energy, $\infty$ power signals.}
-          
+
 \end{enumerate}
 \section{Transformations in Time}
 \begin{enumerate}
     \item Time Shift:
-    \begin{align*}
-        x(t) \rightarrow &[TS] \rightarrow x(t-t_0)\\
-        x[n] \rightarrow &[TS] \rightarrow x[n-n_0]
-    \end{align*}
-    \begin{itemize}
-        \item $t_0,n_0>0$: signal is shifted to the right, or delayed by $t_0$
-        \item $t_0, n_0<0$: signal is shifted to the left, or advanced by $t_0$
-    \end{itemize}
+          \begin{align*}
+              x(t) \rightarrow & [TS] \rightarrow x(t-t_0) \\
+              x[n] \rightarrow & [TS] \rightarrow x[n-n_0]
+          \end{align*}
+          \begin{itemize}
+              \item $t_0,n_0>0$: signal is shifted to the right, or delayed by $t_0$
+              \item $t_0, n_0<0$: signal is shifted to the left, or advanced by $t_0$
+          \end{itemize}
     \item Time Reversal:
-    \begin{align*}
-        x(t)\rightarrow &[TR]\rightarrow x(-t)\\
-        x[n]\rightarrow &[TR]\rightarrow x[-n]\\
-    \end{align*}
+          \begin{align*}
+              x(t)\rightarrow & [TR]\rightarrow x(-t) \\
+              x[n]\rightarrow & [TR]\rightarrow x[-n] \\
+          \end{align*}
     \item Time Scaling:
-    \begin{align*}
-        x(t)\rightarrow &[TSc]\rightarrow x(\alpha t)\\
-        x[n]\rightarrow &[TSc]\rightarrow x[c n]
-    \end{align*}
-    Assume $\alpha, c >0$. If they corresponded to something negative, it can be considered as a scaling and a reversal together.\\
-    \note{ $c$ must be a value such that $cn$ is an integer. We are also assured of the fact that we will be losing information for any value of $c\neq 1$.}
-    \begin{itemize}
-        \item $\alpha, c >1$: shorter timescale, or faster
-        \item $\alpha, c <1$: longer timescale, or slower
-    \end{itemize}
-    \item Composite Transformation: a transformation that involves multiple transformations from 1., 2., 3.\\
-    For example:
-    \begin{align*}
-        x(t)\rightarrow[CT]\rightarrow x(-\alpha t + \beta)
-    \end{align*}
-    Usually, to decompose these transformations, we shift, then scale, then reverse, as and if necessary.
+          \begin{align*}
+              x(t)\rightarrow & [TSc]\rightarrow x(\alpha t) \\
+              x[n]\rightarrow & [TSc]\rightarrow x[c n]
+          \end{align*}
+          Assume $\alpha, c >0$. If they corresponded to something negative, it can be considered as a scaling and a reversal together.\\
+          \note{ $c$ must be a value such that $cn$ is an integer. We are also assured of the fact that we will be losing information for any value of $c\neq 1$.}
+          \begin{itemize}
+              \item $\alpha, c >1$: shorter timescale, or faster
+              \item $\alpha, c <1$: longer timescale, or slower
+          \end{itemize}
+    \item Composite Transformation: a transformation that involves multiple
+          transformations from 1., 2., 3.\\ For example:
+          \begin{align*}
+              x(t)\rightarrow[CT]\rightarrow x(-\alpha t + \beta)
+          \end{align*}
+          Usually, to decompose these transformations, we shift, then scale, then reverse, as and if necessary.
 \end{enumerate}
 \section{More Signal Classifications}
 \begin{enumerate}[start = 3]
-    \item By the period (symmetry under time shift)\\
-    CT signal is periodic $\iff \exists T\neq 0 | x(t)=x(t+T) \forall T$. That signal is periodic with period $t$.\\
-    DT signal is periodic $\iff \exists N\neq 0 | x[n]=x[n+N] \forall N$. That signal is periodic with period $n$.
-    \defn{Fundamental Period}{Smallest $T$ such that $x(t)=x(t+T)\forall t$, and similar for discrete. These are delineated by $T_0,N_0$.}
-    \note{If a signal is periodic, it means that both its real and imaginary parts are periodic.}
-    If there are two periodic signals, their sum $x_1(t)+x_2(t)$ is periodic if $T = LCM(x_1,x_2)$ exists.
-    \note{$T$ might not exist, if the ration between the signals is irrational.}
-    \item Even and Odd Signals:
-    \defn{Even Signal}{$x(t) = x(-t)$, or, the reversal of the signal is identical.}
-    \defn{Odd Signal}{$x(t) = -x(-t)$, or, it is symmetric across the $x=y$. This has, as a requirement, $x(0) = 0$.}
-    If we were to assign (+1) to EVEN, and (-1) to ODD:
-    \begin{itemize}
-        \item EVEN*EVEN=EVEN
-        \item EVEN*ODD=ODD
-        \item ODD*ODD = EVEN
-    \end{itemize}
-    Any signal can be decomposed as $EVEN+ODD$:
-    \begin{equation*}
-        x(t) = \frac{x(t)+x(-t)}{2}+\frac{x(t)-x(-t)}{2}
-    \end{equation*}
+    \item By the period (symmetry under time shift)\\ CT signal is periodic $\iff \exists
+              T\neq 0 | x(t)=x(t+T) \forall T$. That signal is periodic with period $t$.\\ DT
+          signal is periodic $\iff \exists N\neq 0 | x[n]=x[n+N] \forall N$. That signal
+          is periodic with period $n$. \defn{Fundamental Period}{Smallest $T$ such that
+              $x(t)=x(t+T)\forall t$, and similar for discrete. These are delineated by
+              $T_0,N_0$.} \note{If a signal is periodic, it means that both its real and
+              imaginary parts are periodic.} If there are two periodic signals, their sum
+          $x_1(t)+x_2(t)$ is periodic if $T = LCM(x_1,x_2)$ exists. \note{$T$ might not
+              exist, if the ration between the signals is irrational.}
+    \item Even and Odd Signals: \defn{Even Signal}{$x(t) = x(-t)$, or, the reversal of
+              the signal is identical.} \defn{Odd Signal}{$x(t) = -x(-t)$, or, it is
+              symmetric across the $x=y$. This has, as a requirement, $x(0) = 0$.} If we were
+          to assign (+1) to EVEN, and (-1) to ODD:
+          \begin{itemize}
+              \item EVEN*EVEN=EVEN
+              \item EVEN*ODD=ODD
+              \item ODD*ODD = EVEN
+          \end{itemize}
+          Any signal can be decomposed as $EVEN+ODD$:
+          \begin{equation*}
+              x(t) = \frac{x(t)+x(-t)}{2}+\frac{x(t)-x(-t)}{2}
+          \end{equation*}
     \item Complex Exponential Signal: signals of the form
-    \begin{equation*}
-        x(t) = Ce^{\alpha t} \text{ where C and $\alpha$ tend to be complex}
-    \end{equation*}
-    This is often rewritten as
-    \begin{align*}
-        C &= |C|e^{j\phi} = |C|\phase{\phi} \\
-        \alpha &= \sigma + j\omega \\
-        \implies x(t) &= |C|e^{\sigma t}e^{j(\omega t + \phi)}
-    \end{align*}
-    The resulting equation can then be divided into three terms:
-    \begin{enumerate}
-        \item $|C|$ scales the signal
-        \item $e^{\phi t}$ is a real exponential signal:
-        \begin{itemize}
-            \item $\sigma < 0$: exponential decay
-            \item $\sigma > 0$: exponential growth
-            \item $\sigma = 0$: constant 1
-        \end{itemize}
-        \item $e^{j(\omega t + \phi)}$ is a periodic complex exponential:
-        \begin{equation*}
-            e^{j(\omega t + \phi)} = \cos(\omega t +\phi)+j\sin(\omega t + \phi)
-        \end{equation*}
-        This means we have a period of $T = \frac{2\pi}{\omega}$.\\
-        The real part will be the imaginary part shifted by $\pi/2$.\\
-        $\omega$ is known as the fundamental frequency, and $\phi$ is known as the phase.\\
-        So, the resulting function is a scaled sinusoidal of frequency $\omega$ which either grows or decays exponentially, and is phase shifted by $\phi$.\\
-        The instantaneous power of such a function is $|C|^2e^{2\sigma t}$.\\
-        If 
-    \end{enumerate}
+          \begin{equation*}
+              x(t) = Ce^{\alpha t} \text{ where C and $\alpha$ tend to be complex}
+          \end{equation*}
+          This is often rewritten as
+          \begin{align*}
+              C             & = |C|e^{j\phi} = |C|\phase{\phi}        \\
+              \alpha        & = \sigma + j\omega                      \\
+              \implies x(t) & = |C|e^{\sigma t}e^{j(\omega t + \phi)}
+          \end{align*}
+          The resulting equation can then be divided into three terms:
+          \begin{enumerate}
+              \item $|C|$ scales the signal
+              \item $e^{\phi t}$ is a real exponential signal:
+                    \begin{itemize}
+                        \item $\sigma < 0$: exponential decay
+                        \item $\sigma > 0$: exponential growth
+                        \item $\sigma = 0$: constant 1
+                    \end{itemize}
+              \item $e^{j(\omega t + \phi)}$ is a periodic complex exponential:
+                    \begin{equation*}
+                        e^{j(\omega t + \phi)} = \cos(\omega t +\phi)+j\sin(\omega t + \phi)
+                    \end{equation*}
+                    This means we have a period of $T = \frac{2\pi}{\omega}$.\\
+                    The real part will be the imaginary part shifted by $\pi/2$.\\
+                    $\omega$ is known as the fundamental frequency, and $\phi$ is known as the phase.\\
+                    So, the resulting function is a scaled sinusoidal of frequency $\omega$ which either grows or decays exponentially, and is phase shifted by $\phi$.\\
+                    The instantaneous power of such a function is $|C|^2e^{2\sigma t}$.\\
+                    If
+          \end{enumerate}
 \end{enumerate}
 \section{Harmonically Related Complex Exponential (HRCE) Signals}
 Defined by
@@ -303,8 +305,8 @@ But, when it is, we can rewrite the previous equation as:
 \end{equation*}
 We can then decompose these variables into their components:
 \begin{align*}
-    C &= |C|\phase{\phi}\\
-    B &= \sigma + j\omega
+    C & = |C|\phase{\phi}  \\
+    B & = \sigma + j\omega
 \end{align*}
 as we mentioned before.\\
 Thus:
@@ -313,10 +315,11 @@ Thus:
 \end{equation*}
 This signal can be surrounded by an "envelope" defined by the equation(s) $\pm |C|e^{\sigma t}$.
 \subsection{Periodicity in Discrete Time}
-The periodicity in discrete time is not entirely analogous to that of continuous time.
-\note{Let us remember that in CT, if $\omega$ increases, the oscillation rate increases.}
-The difference can be seen in non-integer periods for CT.\\
-Instead of the fundamental period being $T_0=\frac{2\pi}{\omega}$, it will be
+The periodicity in discrete time is not entirely analogous to that of
+continuous time. \note{Let us remember that in CT, if $\omega$ increases, the
+    oscillation rate increases.} The difference can be seen in non-integer periods
+for CT.\\ Instead of the fundamental period being $T_0=\frac{2\pi}{\omega}$, it
+will be
 \begin{equation*}
     N_0 = LCM(T_0=\frac{2\pi}{\omega},1) \text{ if } x[n] = e^{j\omega_0 n}
 \end{equation*}
@@ -329,4 +332,5 @@ If this LCM does not exist, that is, if the period is irrational, $x[n]$ will be
 \note{Just increasing $\omega$ does not continuously increase the rate of oscillation of $x[n]$. \\For example, increasing  it by $2\pi$ would produce an identical signal.}
 \note{Due to the previous note, we can conclude that $x[n]$ is not necessarily unique as a function of $\omega$. Due to this, $\omega$ is usually restricted to intervals of length $2\pi$.}
 When $\omega=k\pi$ with $k = 2n+1 | n\in\mathbb{Z}^+$ will always be $(-1)^n$.
+
 \end{document}
